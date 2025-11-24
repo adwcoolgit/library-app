@@ -1,10 +1,6 @@
 import queryClient from '@/lib/reactQuery';
-import { LoginResponse } from '@/lib/types/login-response.type';
-import { User } from '@/lib/types/user.type';
-import { LoginPayload } from '@/schemas/login.schema';
-import { loginService } from '@/services/login.service';
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { boolean } from 'zod';
+import { User } from '@/types/user.type';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {
   user: User | null;
@@ -27,17 +23,6 @@ const initialState: AuthState = {
   isLogin: false,
 };
 
-// Tidak digunakan karena sudah menggunaka useMutation dari tanstack query
-// export const login = createAsyncThunk(
-//   'auth/login',
-//   async (payload: LoginPayload) => {
-//     const data = await loginService(payload);
-
-//     queryClient.invalidateQueries({ queryKey: ['user'] });
-//     return data;
-//   }
-// );
-
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -49,33 +34,13 @@ const authSlice = createSlice({
       state.isLogin = false;
       queryClient.clear();
     },
-    setUser: (state, action: PayloadAction<User>) => {
+    setUser: (state, action: PayloadAction<User | null>) => {
       state.user = action.payload;
     },
     setIsLogin: (state, action: PayloadAction<boolean>) => {
       state.isLogin = action.payload.valueOf();
     },
   },
-
-  // Tidak digunakan karena sudah menggunaka useMutation dari tanstack query
-  // extraReducers: (builder) => {
-  //   builder
-  //     .addCase(login.pending, (state) => {
-  //       state.loading = true;
-  //       state.status = 'loading';
-  //     })
-  //     .addCase(login.fulfilled, (state, action) => {
-  //       state.user = action.payload.user;
-  //       state.token = action.payload.token;
-  //       state.loading = true;
-  //       state.status = 'success';
-  //       state.isLogin = true;
-  //     })
-  //     .addCase(login.rejected, (state) => {
-  //       state.loading = false;
-  //       state.status = 'error';
-  //     });
-  // },
 });
 
 export const { setUser, setIsLogin, logout } = authSlice.actions;

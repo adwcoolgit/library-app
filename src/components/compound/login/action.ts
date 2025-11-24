@@ -1,12 +1,9 @@
-import { AppDispatch } from '@/app/library';
 import { AuthContext } from '@/contexts/auth.context';
 import { LoginPayload, loginSchema } from '@/schemas/login.schema';
 import { useLogin } from '@/services/hooks/useLogin';
 import { useCallback, useContext } from 'react';
-import { useDispatch } from 'react-redux';
 
 export const useLoginAction = () => {
-  const dispatch = useDispatch<AppDispatch>();
   const { setDialog } = useContext(AuthContext);
   const {
     mutateAsync: loginMutate,
@@ -25,13 +22,10 @@ export const useLoginAction = () => {
       }
 
       try {
-        // Kalau login adalah createAsyncThunk, .unwrap() akan lempar error secara langsung kalau gagal,
-        // await dispatch(login(data)).unwrap();
         const res = await loginMutate(data);
-
+        // console.log(res);
         setDialog(undefined);
       } catch (error) {
-        console.error('Login Error: ', error);
         return { success: false, message: 'Login failed, please try again' };
       }
 

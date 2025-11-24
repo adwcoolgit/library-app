@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { QueryClient, UseMutationOptions } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 
@@ -22,7 +23,7 @@ const queryClient = new QueryClient({
     },
     mutations: {
       onError: () => {
-        alert('Somthink went wrong');
+        alert('Something went wrong');
       },
     },
   },
@@ -37,7 +38,7 @@ export type QueryConfig<T extends (...args: any[]) => any> = Omit<
 >;
 
 export type MutationConfig<
-  MutationFnType extends (...args: any) => Promise<any>
+  MutationFnType extends (...args: any) => Promise<any>,
 > = UseMutationOptions<
   ApiFnReturnType<MutationFnType>,
   Error,

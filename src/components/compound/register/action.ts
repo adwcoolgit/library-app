@@ -1,24 +1,24 @@
 import { AppDispatch } from '@/app/library';
 import { AuthContext } from '@/contexts/auth.context';
-import { LoginPayload, loginSchema } from '@/schemas/login.schema';
-import { useLogin } from '@/services/hooks/useLogin';
+import { RegisterPayload, registerSchema } from '@/schemas/register.schema';
+import { useRegister } from '@/services/hooks/useRegister';
 import { useCallback, useContext } from 'react';
 import { useDispatch } from 'react-redux';
 
-export const useLoginAction = () => {
-  const dispatch = useDispatch<AppDispatch>();
+export const useRegisterAction = () => {
+  const dispatch = useDispatch();
   const { setDialog } = useContext(AuthContext);
   const {
     mutateAsync: loginMutate,
     isPending,
     isSuccess,
     ...props
-  } = useLogin();
+  } = useRegister();
 
   // Gunakan useCallback , mencegah submitForm dibuat ulang setiap render, menghemat re-render di komponen yang
   const submitForm = useCallback(
-    async (data: LoginPayload) => {
-      const result = loginSchema.safeParse(data);
+    async (data: RegisterPayload) => {
+      const result = registerSchema.safeParse(data);
 
       if (!result.success) {
         return { success: false, message: 'There something went wrong' };
@@ -31,7 +31,7 @@ export const useLoginAction = () => {
 
         setDialog(undefined);
       } catch (error) {
-        console.error('Login Error: ', error);
+        // Login Error
         return { success: false, message: 'Login failed, please try again' };
       }
 

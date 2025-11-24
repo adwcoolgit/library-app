@@ -14,15 +14,14 @@ import { useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { SearchBox } from '@/components/search-box';
+import { ListOption } from '@/components/list-option';
 
 export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
   const { setDialog } = useContext(AuthContext);
   const queryClient = useQueryClient();
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const reduxUser = useSelector((state: RootState) => state.auth.user);
-  const currentUser: UserType | null = isLogin
-    ? reduxUser || queryClient.getQueryData<UserType>(getUserQueryKey) || null
-    : null;
+  const currentUser: UserType | null = isLogin ? reduxUser || null : null;
   const [hideUtility, setHideUtility] = useState<boolean>(false);
 
   const btnSearch_Click = () => {
@@ -76,10 +75,14 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
               )}
             </div>
           )}
-          <p className='leading-lg hidden cursor-pointer items-center text-center text-lg font-semibold md:block'>
-            {currentUser.name}
-          </p>
-          <ChevronDown className='hidden cursor-pointer text-black md:block' />
+          <div className='leading-lg hidden cursor-pointer items-center text-center text-lg font-semibold md:flex'>
+            <ListOption>
+              {/* <div className=''> */}
+              {currentUser.name}
+              <ChevronDown className='hidden cursor-pointer text-black md:block' />
+              {/* </div> */}
+            </ListOption>
+          </div>
         </div>
       ) : (
         <div className='mx-0 flex w-full justify-end'>

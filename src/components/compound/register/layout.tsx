@@ -11,6 +11,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import { useRouter } from 'next/navigation';
 import { useContext } from 'react';
 import { Resolver, useForm } from 'react-hook-form';
+import { useRegisterAction } from './action';
 
 interface UIRegisterDialogProps {
   className?: string;
@@ -20,7 +21,7 @@ export const UIRegisterDialog: React.FC<UIRegisterDialogProps> = ({
   className,
 }) => {
   const router = useRouter();
-  const { mutateAsync: signUp, isPending } = useRegister();
+  const { isPending, submitForm, isSuccess } = useRegisterAction();
   const { dialog } = useContext(AuthContext);
 
   const form = useForm<RegisterPayload>({
@@ -35,7 +36,9 @@ export const UIRegisterDialog: React.FC<UIRegisterDialogProps> = ({
     mode: 'onTouched',
   });
 
-  const onSubmit = () => {};
+  const onSubmit = (data: RegisterPayload) => {
+    submitForm(data);
+  };
 
   return (
     <AnimatePresence key={dialog}>

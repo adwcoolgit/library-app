@@ -9,15 +9,16 @@ import { useLoginAction } from './action';
 import { LoginPayload, loginSchema } from '@/schemas/login.schema';
 import { AuthContainer } from '@/components/auth-container';
 import { InputGroup } from '@/components/input-group';
-import { Logo } from '@/components/logo';
+import { useEffect, useState } from 'react';
+import { number } from 'zod';
+import { MessageResponseProps } from '@/global-type/component-type';
 
 interface UIDialogLoginProps {
   className?: string;
 }
 
 export const UIAuthLogin: React.FC<UIDialogLoginProps> = ({ className }) => {
-  const router = useRouter();
-  const { isPending, submitForm, isSuccess } = useLoginAction();
+  const { isPending, submitForm, isSuccess, isError, error } = useLoginAction();
 
   const form = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
@@ -48,6 +49,7 @@ export const UIAuthLogin: React.FC<UIDialogLoginProps> = ({ className }) => {
           isLogin={true}
           className='w-fit'
           isPending={isPending}
+          error={error}
         >
           <InputGroup
             id='email'

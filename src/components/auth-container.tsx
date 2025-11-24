@@ -1,24 +1,17 @@
 import { cn } from '@/lib/utils';
-import { SubmitHandler, UseFormReturn } from 'react-hook-form';
 import { X } from 'lucide-react';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { AuthContext } from '@/contexts/auth.context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/library';
 import { Button } from './ui/button';
 import { FormLogin } from './compound/login/partial';
 import { Logo } from './logo';
+import { GenericFormProps } from '@/global-type/component-type';
+import { FieldValues } from 'react-hook-form';
+import { hideToast } from '@/features/ui/uiSlice';
 
-type GenericFormProps<T> = {
-  form: UseFormReturn<T>;
-  onSubmit: SubmitHandler<T>;
-  children?: React.ReactNode;
-  className?: string;
-  isLogin: boolean;
-  isPending?: boolean;
-};
-
-export const AuthContainer = <T,>({
+export const AuthContainer = <T extends FieldValues>({
   className,
   isLogin = false,
   isPending = false,
@@ -27,7 +20,8 @@ export const AuthContainer = <T,>({
   children,
 }: GenericFormProps<T>) => {
   const { dialog, setDialog } = useContext(AuthContext);
-  const { loading } = useSelector((state: RootState) => state.auth);
+  const toastMessage = useSelector((state: RootState) => state.ui.toastMessage);
+  const dispatch = useDispatch();
 
   const closeDialog_Click = () => {
     setDialog(undefined);
@@ -37,6 +31,14 @@ export const AuthContainer = <T,>({
     closeDialog_Click();
     setDialog(dialog !== 'LOG_IN' ? 'LOG_IN' : 'REGISTER');
   };
+
+  useEffect(() => {
+    if (toastMessage) {
+      setTimeout(() => {
+        dispatch(hideToast());
+      }, 10000);
+    }
+  }, [toastMessage]);
 
   return (
     <>
@@ -53,7 +55,7 @@ export const AuthContainer = <T,>({
         <FormLogin.Root className='h-fit w-full border-0 p-0'>
           <FormLogin.Wrapper className='h-fit w-full border-0 p-0'>
             <FormLogin.Content className='flex flex-col justify-start gap-y-5 p-0'>
-              <Logo />
+              <Logo className='w-full' />
               <div className='w-full gap-y-2'>
                 <h1 className='mb-3 text-3xl leading-12 font-bold'>
                   {isLogin == true ? 'Login' : 'Register'}
@@ -66,20 +68,6 @@ export const AuthContainer = <T,>({
               </div>
               <form onSubmit={form.handleSubmit(onSubmit)}>
                 {children}
-                {!isLogin && (
-                  <>
-                    <p className='mt-1 mb-3 text-xs leading-4.5 font-normal'>
-                      By sign up, you agree to our{' '}
-                      <span className='text-primary cursor-pointer'>
-                        Term Service
-                      </span>{' '}
-                      &{' '}
-                      <span className='text-primary cursor-pointer'>
-                        Privacy Policy
-                      </span>
-                    </p>
-                  </>
-                )}
                 <Button
                   type='submit'
                   className='mb-5 ml-0 flex w-88 justify-start'
@@ -96,6 +84,9 @@ export const AuthContainer = <T,>({
                 >
                   {isLogin == true ? ' Register' : ' Log In'}
                 </span>
+              </p>
+              <p className='text-field-warning leading-xs mb-4 flex h-1 items-center text-center text-sm font-medium'>
+                {toastMessage}
               </p>
             </FormLogin.Content>
           </FormLogin.Wrapper>
