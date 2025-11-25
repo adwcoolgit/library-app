@@ -44,7 +44,7 @@ export const AuthContainer = <T extends FieldValues>({
     <>
       <div
         className={cn(
-          'm-auto flex h-fit w-fit items-center justify-center gap-y-4 rounded-[12px] bg-white p-8 drop-shadow-2xl',
+          'm-auto flex h-fit w-fit items-center justify-center gap-y-4 rounded-[12px] border bg-white p-8.75 drop-shadow-2xl md:p-8',
           className
         )}
       >
@@ -57,30 +57,30 @@ export const AuthContainer = <T extends FieldValues>({
             <FormLogin.Content className='flex flex-col justify-start gap-y-5 p-0'>
               <Logo className='w-full' />
               <div className='w-full gap-y-2'>
-                <h1 className='mb-3 text-3xl leading-12 font-bold'>
+                <h1 className='text-display-xs mb-3 leading-9 font-bold md:text-3xl md:leading-12'>
                   {isLogin == true ? 'Login' : 'Register'}
                 </h1>
-                <p className='text-md leading-md flex h-7.5 w-fit font-semibold tracking-tight text-neutral-700'>
+                <p className='md:text-md md:leading-md flex h-7.5 w-fit text-sm leading-3.5 font-semibold tracking-tighter text-neutral-700 md:tracking-tight'>
                   {!isLogin
                     ? `Create your account to start borrowing books.`
                     : `Sign in to manage your library account.`}
                 </p>
               </div>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className='w-full'>
                 {children}
                 <Button
                   type='submit'
-                  className='mb-5 ml-0 flex w-88 justify-start'
+                  className='mb-5 ml-0 flex w-full justify-start md:w-88'
                   disabled={isPending}
                 >
                   {isLogin == true ? 'Login' : 'Register'}
                 </Button>
               </form>
-              <p className='text-md flex justify-center px-6 leading-5 font-semibold text-black'>
+              <p className='md:text-md leading-sm flex justify-center px-6 text-sm font-semibold text-black md:leading-5'>
                 {`${!isLogin ? 'Already' : `Don't`} have an account? `}
                 <span
                   onClick={dialogMode_Click}
-                  className='text-primary-500 text-md ml-1 cursor-pointer font-bold'
+                  className='text-primary-500 md:text-md leading-sm ml-1 cursor-pointer text-sm font-bold md:leading-5'
                 >
                   {isLogin == true ? ' Register' : ' Log In'}
                 </span>

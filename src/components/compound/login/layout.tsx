@@ -34,7 +34,7 @@ export const UIAuthLogin: React.FC<UIDialogLoginProps> = ({ className }) => {
     <AnimatePresence mode='wait'>
       <motion.div
         className={cn(
-          'sm:px-auto bg-background/90 absolute top-0 z-50 flex min-h-screen w-screen px-3',
+          'sm:px-auto bg-background/90 absolute top-0 z-50 flex min-h-screen w-screen px-0',
           className
         )}
         initial={{ y: 0, opacity: 0 }}

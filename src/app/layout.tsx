@@ -2,6 +2,7 @@
 
 import { Quicksand } from 'next/font/google';
 import './globals.css';
+// import './embla.css';
 import clsx from 'clsx';
 import Providers from '@/providers/provider';
 import { AuthContext, AuthDialogType } from '@/contexts/auth.context';

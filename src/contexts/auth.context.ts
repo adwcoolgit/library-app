@@ -1,6 +1,6 @@
 import { createContext } from 'react';
 
-type AuthDialog = 'REGISTER' | 'LOG_IN' | undefined;
+export type AuthDialog = 'REGISTER' | 'LOG_IN' | undefined;
 
 export type AuthDialogType = {
   dialog: AuthDialog;

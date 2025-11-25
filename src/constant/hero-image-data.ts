@@ -1,5 +1,6 @@
 import { StaticImageData } from 'next/image';
-import imgHero01 from '../../public/images/hero-image-01.png';
+import imgHero01 from '../../public/images/hero-image-01.svg';
+import imgHero02 from '../../public/images/hero-image-02.jpg';
 
 interface HeroImageProps {
   src: StaticImageData;
@@ -12,11 +13,11 @@ export const HeroImageData: HeroImageProps[] = [
     alt: 'Hero',
   },
   {
-    src: imgHero01,
+    src: imgHero02,
     alt: 'Hero',
   },
   {
-    src: imgHero01,
+    src: imgHero02,
     alt: 'Hero',
   },
 ];

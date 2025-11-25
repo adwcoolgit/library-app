@@ -7,6 +7,8 @@ import { AuthContext } from '@/contexts/auth.context';
 import { useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from './library';
+import { Wrapper } from '@/components/wrapper';
+import { Carousel } from '@/components/carousel';
 
 export default function Home() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
@@ -14,8 +16,8 @@ export default function Home() {
 
   return (
     <>
-      <div className='sticky z-50 flex'>
-        <UIHeaderSearchBar.Wrapper className='flex-between my-4.5 md:px-4'>
+      <div className='sticky z-50 flex py-3 md:py-4.5'>
+        <UIHeaderSearchBar.Wrapper className='flex-between md:px-4'>
           <UIHeaderSearchBar.Logo className='' />
           {isLogin && <UIHeaderSearchBar.Search className='w-125' />}
           <UIHeaderSearchBar.Content />
@@ -28,6 +30,10 @@ export default function Home() {
       ) : (
         <></>
       )}
+
+      <Wrapper className='mt-4 md:mt-12'>
+        <Carousel />
+      </Wrapper>
     </>
   );
 }

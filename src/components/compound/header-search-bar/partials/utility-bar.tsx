@@ -5,39 +5,49 @@ import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { ChevronDown, Menu, Search, X } from 'lucide-react';
 import { type User as UserType } from '@/types/user.type';
-import { AuthContext } from '@/contexts/auth.context';
+import { AuthContext, AuthDialog } from '@/contexts/auth.context';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/library';
 import { useQueryClient } from '@tanstack/react-query';
-import { getUserQueryKey } from '@/services/hooks/useUser';
 import { useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { SearchBox } from '@/components/search-box';
 import { ListOption } from '@/components/list-option';
 
+interface StateProps {
+  search: boolean;
+  menu: boolean;
+}
+
+const defaultState: StateProps = {
+  search: false,
+  menu: false,
+};
+
 export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
   const { setDialog } = useContext(AuthContext);
-  const queryClient = useQueryClient();
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const reduxUser = useSelector((state: RootState) => state.auth.user);
   const currentUser: UserType | null = isLogin ? reduxUser || null : null;
-  const [hideUtility, setHideUtility] = useState<boolean>(false);
+  const [hideUtility, setHideUtility] = useState<StateProps>(defaultState);
 
-  const btnSearch_Click = () => {
-    setHideUtility(!hideUtility);
+  const btnSearch_Click = (state: boolean) => {
+    setHideUtility((prev) => ({
+      ...prev,
+      search: state,
+    }));
   };
 
-  const btnHideSearch_Click = () => {
-    setHideUtility(!hideUtility);
+  const btnAuth_Click = (state: AuthDialog) => {
+    setDialog(state);
   };
 
-  const btnLogin_Click = () => {
-    setDialog('LOG_IN');
-  };
-
-  const btnRegister_Click = () => {
-    setDialog('REGISTER');
+  const btnMenu_Click = (state: boolean) => {
+    setHideUtility((prev) => ({
+      ...prev,
+      menu: state,
+    }));
   };
 
   return (
@@ -53,12 +63,12 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
 
           <CartBadge
             btnSearch={btnSearch_Click}
-            btnHideSearch={btnHideSearch_Click}
+            btnMenu={btnMenu_Click}
             hideUtility={hideUtility}
             className='md:hidden'
           />
 
-          {!hideUtility && (
+          {!hideUtility.search && (
             <div className='flex-center bg-background flex size-10 cursor-pointer overflow-hidden rounded-full border md:size-12'>
               {currentUser.avatarUrl?.src ? (
                 <Image
@@ -77,38 +87,22 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
           )}
           <div className='leading-lg hidden cursor-pointer items-center text-center text-lg font-semibold md:flex'>
             <ListOption>
-              {/* <div className=''> */}
               {currentUser.name}
               <ChevronDown className='hidden cursor-pointer text-black md:block' />
-              {/* </div> */}
             </ListOption>
           </div>
         </div>
       ) : (
-        <div className='mx-0 flex w-full justify-end'>
-          <div className='hidden gap-x-4 md:flex'>
-            <Button
-              onClick={btnLogin_Click}
-              variant='outline'
-              size={'md'}
-              className='w-40.75'
-              id='login'
-            >
-              Login
-            </Button>
-            <Button
-              onClick={btnRegister_Click}
-              variant='default'
-              size={'md'}
-              className='w-40.75'
-              id='register'
-            >
-              Register
-            </Button>
-          </div>
+        <div className='relative mx-0 flex w-full justify-end'>
+          {/* Login & Register button */}
+          <AuthButton
+            className={`md:mt-none bg-background absolute mt-10 w-auto md:relative`}
+            btnLogin={btnAuth_Click}
+            hideUtility={hideUtility}
+          />
           <CartBadge
             btnSearch={btnSearch_Click}
-            btnHideSearch={btnHideSearch_Click}
+            btnMenu={btnMenu_Click}
             hideUtility={hideUtility}
             className='md:hidden'
           />
@@ -119,16 +113,17 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
 };
 
 interface FunctionProps extends ComponentProps {
-  hideUtility: boolean;
-  btnSearch: () => void;
-  btnHideSearch: () => void;
+  hideUtility: StateProps;
+  btnSearch?: (state: boolean) => void;
+  btnMenu?: (state: boolean) => void;
+  btnLogin?: (state: AuthDialog) => void;
 }
 
 const CartBadge: React.FC<FunctionProps> = ({
   className,
   hideUtility,
-  btnSearch,
-  btnHideSearch,
+  btnSearch = (_value) => {},
+  btnMenu = (_value) => {},
 }) => {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
 
@@ -139,23 +134,81 @@ const CartBadge: React.FC<FunctionProps> = ({
         className
       )}
     >
-      {hideUtility ? (
+      {hideUtility.search || hideUtility.menu ? (
         <div className='ml-4 flex w-full items-center gap-x-4'>
-          <SearchBox className='left-0 flex h-10 w-full' />
-          <X onClick={btnHideSearch} />
+          {hideUtility.search && (
+            <>
+              <SearchBox className='left-0 flex h-10 w-full' />
+              <X onClick={() => btnSearch(!hideUtility.search)} />
+            </>
+          )}
+          {hideUtility.menu && (
+            <div className='flex h-6 w-full justify-end gap-x-4'>
+              <Search
+                className='block size-6 w-fit md:hidden'
+                onClick={() => {
+                  btnSearch(!hideUtility.search);
+                  btnMenu(!hideUtility.menu);
+                }}
+              />
+              <X
+                className='block size-6 w-fit'
+                onClick={() => btnMenu(!hideUtility.menu)}
+              />
+            </div>
+          )}
         </div>
       ) : (
         <div className='flex gap-x-4 md:gap-x-6'>
           <div>
             <Search
               className='block size-6 w-full md:hidden'
-              onClick={btnSearch}
+              onClick={() => btnSearch(!hideUtility.search)}
             />
           </div>
-          <CartUtility />
-          {!isLogin && <Menu className='block size-6 md:hidden' />}
+          {hideUtility.search && <CartUtility />}
+          {!isLogin && (
+            <Menu
+              onClick={() => btnMenu(!hideUtility.menu)}
+              className='block size-6 md:hidden'
+            />
+          )}
         </div>
       )}
+    </div>
+  );
+};
+
+const AuthButton: React.FC<FunctionProps> = ({
+  className,
+  hideUtility,
+  btnLogin = (_value) => {},
+}) => {
+  return (
+    <div
+      className={cn(
+        `${hideUtility.menu ? 'flex' : 'hidden'} md:p-none gap-x-3 p-4 md:flex md:gap-x-4`,
+        className
+      )}
+    >
+      <Button
+        onClick={() => btnLogin('LOG_IN')}
+        variant='outline'
+        size={'md'}
+        className='h-10 w-40.75'
+        id='login'
+      >
+        Login
+      </Button>
+      <Button
+        onClick={() => btnLogin('REGISTER')}
+        variant='default'
+        size={'md'}
+        className='h-10 w-40.75'
+        id='register'
+      >
+        Register
+      </Button>
     </div>
   );
 };
