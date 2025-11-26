@@ -46,8 +46,8 @@ export const UIAuthLogin: React.FC<UIDialogLoginProps> = ({ className }) => {
         <AuthContainer
           form={form}
           onSubmit={onSubmit}
-          isLogin={true}
-          className='w-fit'
+          isLogin={true}  
+          className='md:w-fit'
           isPending={isPending}
           error={error}
         >

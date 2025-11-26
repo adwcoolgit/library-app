@@ -184,6 +184,10 @@ const AuthButton: React.FC<FunctionProps> = ({
   hideUtility,
   btnLogin = (_value) => {},
 }) => {
+  const cmdAuth_Click=()=>{
+    hideUtility.menu = false
+  }
+
   return (
     <div
       className={cn(
@@ -192,7 +196,10 @@ const AuthButton: React.FC<FunctionProps> = ({
       )}
     >
       <Button
-        onClick={() => btnLogin('LOG_IN')}
+        onClick={() => {
+          btnLogin('LOG_IN');
+          cmdAuth_Click();
+        }}
         variant='outline'
         size={'md'}
         className='h-10 w-40.75'
@@ -201,7 +208,10 @@ const AuthButton: React.FC<FunctionProps> = ({
         Login
       </Button>
       <Button
-        onClick={() => btnLogin('REGISTER')}
+        onClick={() => {
+          btnLogin('REGISTER');
+          cmdAuth_Click();
+        }}
         variant='default'
         size={'md'}
         className='h-10 w-40.75'

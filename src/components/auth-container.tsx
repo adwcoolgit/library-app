@@ -44,7 +44,7 @@ export const AuthContainer = <T extends FieldValues>({
     <>
       <div
         className={cn(
-          'm-auto flex h-fit w-fit items-center justify-center gap-y-4 rounded-[12px] border bg-white p-8.75 drop-shadow-2xl md:p-8',
+          'flex h-fit w-auto grow md:grow-0 md:w-fit my-auto mx-1 md:mx-auto items-center justify-center gap-y-4 rounded-[12px] border bg-white p-8.75 drop-shadow-2xl md:p-8',
           className
         )}
       >

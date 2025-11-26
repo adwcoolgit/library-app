@@ -59,22 +59,22 @@ export const ListOption: React.FC<UtilityOptionProps> = ({
   return (
     <div
       className={cn(
-        'flex w-auto justify-center border md:justify-end',
+        'flex w-full md:w-auto justify-center border md:justify-end',
         className
       )}
     >
       <DropdownMenu>
         <DropdownMenuTrigger
           asChild
-          className='hover:text-primary h-5 cursor-pointer justify-end sm:w-auto'
+          className='hover:text-primary h-5 cursor-pointer md:justify-end sm:w-auto'
         >
           <div className='flex items-center gap-x-1'>{children}</div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='mt-2 flex w-90.25 justify-start rounded-sm border bg-white p-1.5 md:w-auto'>
+        <DropdownMenuContent className='mt-2  flex w-90.25 justify-start rounded-sm border bg-primary mx-auto p-1.5 md:w-auto'>
           <DropdownMenuRadioGroup
             value={utilityOption}
             onValueChange={setUtilityOption}
-            className='w-auto rounded-md bg-white'
+            className='w-full md:w-auto rounded-md bg-white'
           >
             {UtilityData.map((option, index) => (
               <DropdownMenuRadioItem
