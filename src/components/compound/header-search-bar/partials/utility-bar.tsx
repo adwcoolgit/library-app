@@ -69,7 +69,7 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
           />
 
           {!hideUtility.search && (
-            <div className='flex-center bg-background flex size-10 cursor-pointer overflow-hidden rounded-full border md:size-12'>
+            <ListOption className='flex-center bg-background flex size-10 cursor-pointer overflow-hidden rounded-full border md:size-12'>
               {currentUser.avatarUrl?.src ? (
                 <Image
                   src={currentUser.avatarUrl}
@@ -83,7 +83,7 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
                   className='flex size-7 md:size-10'
                 />
               )}
-            </div>
+            </ListOption>
           )}
           <div className='leading-lg hidden cursor-pointer items-center text-center text-lg font-semibold md:flex'>
             <ListOption>

@@ -9,6 +9,8 @@ import { User } from '@/types/user.type';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useDispatch } from 'react-redux';
 import { getUserQueryKey } from './hooks/useUser';
+import axios from 'axios';
+import { showToast } from '@/features/ui/uiSlice';
 
 export async function registerService(
   params: RegisterPayload
@@ -54,6 +56,18 @@ export const useRegisterService = (params: UseRegisterParam = {}) => {
         context
       );
     },
+    onError: (error) => {
+      let message: string = 'Something went wrong';
+
+      if (axios.isAxiosError(error)) {
+        message = error.response?.data.message || error.message;
+      } else if (error instanceof Error) {
+        message = error.message;
+      }
+
+      dispatch(showToast(message));
+    },
+    retry: false,
   });
 };
 

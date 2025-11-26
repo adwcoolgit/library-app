@@ -12,7 +12,6 @@ export const useLoginAction = () => {
     ...props
   } = useLogin();
 
-  // Gunakan useCallback , mencegah submitForm dibuat ulang setiap render, menghemat re-render di komponen yang
   const submitForm = useCallback(
     async (data: LoginPayload) => {
       const result = loginSchema.safeParse(data);
@@ -23,13 +22,13 @@ export const useLoginAction = () => {
 
       try {
         const res = await loginMutate(data);
-        // console.log(res);
         setDialog(undefined);
-      } catch (error) {
+        return res;
+      } catch {
         return { success: false, message: 'Login failed, please try again' };
       }
 
-      return { success: true, message: 'Request submitted' };
+      // return { success: true, message: 'Request submitted' };
     },
     [loginMutate, setDialog]
   );
