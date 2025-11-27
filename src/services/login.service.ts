@@ -84,7 +84,7 @@ export const useLoginService = (params: UseLoginParams = {}) => {
       );
     },
     onError: (error) => {
-      let message = ' Somthing went wrong';
+      let message: string = ' Somthing went wrong';
 
       if (axios.isAxiosError(error)) {
         message = error.response?.data.message || error.message;

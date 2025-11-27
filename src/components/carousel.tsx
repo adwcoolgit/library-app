@@ -3,8 +3,10 @@ import useEmblaCarousel from 'embla-carousel-react';
 import Autoplay from 'embla-carousel-autoplay';
 import { HeroImageData } from '@/constant/hero-image-data';
 import Image from 'next/image';
+import { ComponentProps } from '@/global-type/component-type';
+import { cn } from '@/lib/utils';
 
-export function Carousel() {
+export const Carousel: React.FC<ComponentProps> = ({ className }) => {
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false }, [Autoplay()]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -29,7 +31,10 @@ export function Carousel() {
   };
 
   return (
-    <div className='embla h-37.5 w-full md:h-116.75' ref={emblaRef}>
+    <div
+      className={cn('embla h-37.5 w-full md:h-116.75', className)}
+      ref={emblaRef}
+    >
       <div className='embla__container w-full md:h-110.25'>
         {HeroImageData.map((image, index) => (
           <div
@@ -58,4 +63,4 @@ export function Carousel() {
       </div>
     </div>
   );
-}
+};

@@ -3,21 +3,17 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { cn } from '@/lib/utils';
-import { useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'motion/react';
 import { useLoginAction } from './action';
 import { LoginPayload, loginSchema } from '@/schemas/login.schema';
 import { AuthContainer } from '@/components/auth-container';
 import { InputGroup } from '@/components/input-group';
-import { useEffect, useState } from 'react';
-import { number } from 'zod';
-import { MessageResponseProps } from '@/global-type/component-type';
 
-interface UIDialogLoginProps {
+interface DialogLoginProps {
   className?: string;
 }
 
-export const UIAuthLogin: React.FC<UIDialogLoginProps> = ({ className }) => {
+export const UIAuthLogin: React.FC<DialogLoginProps> = ({ className }) => {
   const { isPending, submitForm, isSuccess, isError, error } = useLoginAction();
 
   const form = useForm<LoginPayload>({
@@ -46,7 +42,7 @@ export const UIAuthLogin: React.FC<UIDialogLoginProps> = ({ className }) => {
         <AuthContainer
           form={form}
           onSubmit={onSubmit}
-          isLogin={true}  
+          isLogin={true}
           className='md:w-fit'
           isPending={isPending}
           error={error}

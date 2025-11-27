@@ -34,7 +34,16 @@ export type ApiFnReturnType<FnType extends (...args: any) => Promise<any>> =
 
 export type QueryConfig<T extends (...args: any[]) => any> = Omit<
   ReturnType<T>,
-  'queryKey' | 'queryFn'
+  'queryKey' | 'queryFn' | 'initialPageParam'
+>;
+
+export type InfiniteQueryConfig<T extends (...args: any[]) => any> = Omit<
+  ReturnType<T>,
+  | 'queryKey'
+  | 'queryFn'
+  | 'initialPageParam'
+  | 'getNextPageParam'
+  | 'getPreviousPageParam'
 >;
 
 export type MutationConfig<

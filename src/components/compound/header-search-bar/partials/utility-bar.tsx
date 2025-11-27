@@ -184,9 +184,9 @@ const AuthButton: React.FC<FunctionProps> = ({
   hideUtility,
   btnLogin = (_value) => {},
 }) => {
-  const cmdAuth_Click=()=>{
-    hideUtility.menu = false
-  }
+  const cmdAuth_Click = () => {
+    hideUtility.menu = false;
+  };
 
   return (
     <div

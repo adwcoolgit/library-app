@@ -9,6 +9,9 @@ import { useSelector } from 'react-redux';
 import { RootState } from './library';
 import { Wrapper } from '@/components/wrapper';
 import { Carousel } from '@/components/carousel';
+import { ListCard } from '@/components/compound/card-box';
+import { CategoriesCard } from '@/components/compound/categories/layout';
+import { BooksCard } from '@/components/compound/books/layout';
 
 export default function Home() {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
@@ -17,7 +20,7 @@ export default function Home() {
   return (
     <>
       <div className='sticky z-50 flex py-3 md:py-4.5'>
-        <UIHeaderSearchBar.Wrapper className='flex-between md:px-4'>
+        <UIHeaderSearchBar.Wrapper className='flex-between'>
           <UIHeaderSearchBar.Logo className='' />
           {isLogin && <UIHeaderSearchBar.Search className='w-125' />}
           <UIHeaderSearchBar.Content />
@@ -31,8 +34,10 @@ export default function Home() {
         <></>
       )}
 
-      <Wrapper className='mt-4 md:mt-12'>
-        <Carousel />
+      <Wrapper className='mt-4 flex-col gap-y-4 md:mt-12 md:gap-y-12'>
+        <Carousel className='' />
+        <CategoriesCard className='' />
+        <BooksCard />
       </Wrapper>
     </>
   );
