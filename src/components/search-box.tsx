@@ -13,7 +13,7 @@ interface SearchBoxProps {
 
 export const SearchBox: React.FC<SearchBoxProps> = ({ className }) => {
   const dispatch = useDispatch();
-  const [searchValue, setSearchValue] = useState('null');
+  const [searchValue, setSearchValue] = useState('');
 
   const handleDebouncedChange = debounce((value: string) => {
     setSearchValue(value);

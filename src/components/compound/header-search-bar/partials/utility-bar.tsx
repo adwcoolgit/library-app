@@ -6,16 +6,23 @@ import Image from 'next/image';
 import { ChevronDown, Menu, Search, X } from 'lucide-react';
 import { type User as UserType } from '@/types/user.type';
 import { AuthContext, AuthDialog } from '@/contexts/auth.context';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/app/library';
 import { useQueryClient } from '@tanstack/react-query';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { SearchBox } from '@/components/search-box';
 import { ListOption } from '@/components/list-option';
+import {
+  booksTitle,
+  isVisibleMenu,
+  isVisibleSearch,
+  openAuthModal,
+  showToast,
+} from '@/features/ui/uiSlice';
 
-interface StateProps {
+export interface StateProps {
   search: boolean;
   menu: boolean;
 }
@@ -30,24 +37,11 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
   const reduxUser = useSelector((state: RootState) => state.auth.user);
   const currentUser: UserType | null = isLogin ? reduxUser || null : null;
-  const [hideUtility, setHideUtility] = useState<StateProps>(defaultState);
-
-  const btnSearch_Click = (state: boolean) => {
-    setHideUtility((prev) => ({
-      ...prev,
-      search: state,
-    }));
-  };
+  const [hideUtility] = useState<StateProps>(defaultState);
+  const visibleSearch = useSelector((state: RootState) => state.ui.search);
 
   const btnAuth_Click = (state: AuthDialog) => {
     setDialog(state);
-  };
-
-  const btnMenu_Click = (state: boolean) => {
-    setHideUtility((prev) => ({
-      ...prev,
-      menu: state,
-    }));
   };
 
   return (
@@ -61,14 +55,9 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
         >
           <CartUtility className='hidden md:flex' />
 
-          <CartBadge
-            btnSearch={btnSearch_Click}
-            btnMenu={btnMenu_Click}
-            hideUtility={hideUtility}
-            className='md:hidden'
-          />
+          <CartBadge className='md:hidden' />
 
-          {!hideUtility.search && (
+          {!visibleSearch && (
             <ListOption className='flex-center bg-background flex size-10 cursor-pointer overflow-hidden rounded-full border md:size-12'>
               {currentUser.avatarUrl?.src ? (
                 <Image
@@ -100,12 +89,7 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
             btnLogin={btnAuth_Click}
             hideUtility={hideUtility}
           />
-          <CartBadge
-            btnSearch={btnSearch_Click}
-            btnMenu={btnMenu_Click}
-            hideUtility={hideUtility}
-            className='md:hidden'
-          />
+          <CartBadge className='md:hidden' />
         </div>
       )}
     </>
@@ -119,13 +103,11 @@ interface FunctionProps extends ComponentProps {
   btnLogin?: (state: AuthDialog) => void;
 }
 
-const CartBadge: React.FC<FunctionProps> = ({
-  className,
-  hideUtility,
-  btnSearch = (_value) => {},
-  btnMenu = (_value) => {},
-}) => {
+const CartBadge: React.FC<ComponentProps> = ({ className }) => {
   const isLogin = useSelector((state: RootState) => state.auth.isLogin);
+  const visibleMenu = useSelector((state: RootState) => state.ui.menu);
+  const visibleSearch = useSelector((state: RootState) => state.ui.search);
+  const dispatch = useDispatch();
 
   return (
     <div
@@ -134,26 +116,31 @@ const CartBadge: React.FC<FunctionProps> = ({
         className
       )}
     >
-      {hideUtility.search || hideUtility.menu ? (
+      {visibleSearch || visibleMenu ? (
         <div className='ml-4 flex w-full items-center gap-x-4'>
-          {hideUtility.search && (
+          {visibleSearch && (
             <>
               <SearchBox className='left-0 flex h-10 w-full' />
-              <X onClick={() => btnSearch(!hideUtility.search)} />
+              <X
+                onClick={() => {
+                  dispatch(isVisibleSearch(!visibleSearch));
+                  dispatch(booksTitle(null));
+                }}
+              />
             </>
           )}
-          {hideUtility.menu && (
+          {visibleMenu && (
             <div className='flex h-6 w-full justify-end gap-x-4'>
               <Search
-                className='block size-6 w-fit md:hidden'
+                className='block size-6 w-fit'
                 onClick={() => {
-                  btnSearch(!hideUtility.search);
-                  btnMenu(!hideUtility.menu);
+                  dispatch(isVisibleSearch(!visibleSearch));
+                  dispatch(isVisibleMenu(!visibleMenu));
                 }}
               />
               <X
                 className='block size-6 w-fit'
-                onClick={() => btnMenu(!hideUtility.menu)}
+                onClick={() => dispatch(isVisibleMenu(!visibleMenu))}
               />
             </div>
           )}
@@ -163,13 +150,13 @@ const CartBadge: React.FC<FunctionProps> = ({
           <div>
             <Search
               className='block size-6 w-full md:hidden'
-              onClick={() => btnSearch(!hideUtility.search)}
+              onClick={() => dispatch(isVisibleSearch(!visibleSearch))}
             />
           </div>
-          {hideUtility.search && <CartUtility />}
+          {visibleSearch && <CartUtility />}
           {!isLogin && (
             <Menu
-              onClick={() => btnMenu(!hideUtility.menu)}
+              onClick={() => dispatch(isVisibleMenu(!visibleMenu))}
               className='block size-6 md:hidden'
             />
           )}
@@ -181,17 +168,20 @@ const CartBadge: React.FC<FunctionProps> = ({
 
 const AuthButton: React.FC<FunctionProps> = ({
   className,
-  hideUtility,
   btnLogin = (_value) => {},
 }) => {
+  const visibleMenu = useSelector((state: RootState) => state.ui.menu);
+  const dispatch = useDispatch();
+
   const cmdAuth_Click = () => {
-    hideUtility.menu = false;
+    // hideUtility.menu = false;
+    dispatch(isVisibleMenu(false));
   };
 
   return (
     <div
       className={cn(
-        `${hideUtility.menu ? 'flex' : 'hidden'} md:p-none gap-x-3 p-4 md:flex md:gap-x-4`,
+        `${visibleMenu ? 'flex' : 'hidden'} md:p-none gap-x-3 p-4 md:flex md:gap-x-4`,
         className
       )}
     >

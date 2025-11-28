@@ -1,30 +1,34 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface UIState {
-  showLoginModal: boolean;
+  showAuthModal: boolean;
   toastMessage: string | null;
-  categoryId: number | undefined;
-  q: string | undefined;
-  authorId: number | undefined;
+  categoryId: number | null;
+  q: string | null;
+  authorId: number | null;
+  menu: boolean;
+  search: boolean;
 }
 
 const initialState: UIState = {
-  showLoginModal: false,
+  showAuthModal: false,
   toastMessage: null,
-  categoryId: undefined,
-  q: undefined,
-  authorId: undefined,
+  categoryId: null,
+  q: null,
+  authorId: null,
+  menu: false,
+  search: false,
 };
 
 const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    openLoginModal: (state) => {
-      state.showLoginModal = true;
+    openAuthModal: (state) => {
+      state.showAuthModal = true;
     },
-    closeLoginModal: (state) => {
-      state.showLoginModal = false;
+    closeAuthModal: (state) => {
+      state.showAuthModal = false;
     },
     showToast: (state, action: PayloadAction<string>) => {
       state.toastMessage = action.payload;
@@ -32,25 +36,33 @@ const uiSlice = createSlice({
     hideToast: (state) => {
       state.toastMessage = null;
     },
-    categoryId: (state, action: PayloadAction<number>) => {
+    categoryId: (state, action: PayloadAction<number | null>) => {
       state.categoryId = action.payload;
     },
-    booksTitle: (state, action: PayloadAction<string>) => {
+    booksTitle: (state, action: PayloadAction<string | null>) => {
       state.q = action.payload;
     },
-    authorId: (state, action: PayloadAction<number>) => {
+    authorId: (state, action: PayloadAction<number | null>) => {
       state.authorId = action.payload;
+    },
+    isVisibleMenu: (state, action: PayloadAction<boolean>) => {
+      state.menu = action.payload;
+    },
+    isVisibleSearch: (state, action: PayloadAction<boolean>) => {
+      state.search = action.payload;
     },
   },
 });
 
 export const {
-  openLoginModal,
-  closeLoginModal,
+  openAuthModal,
+  closeAuthModal,
   showToast,
   hideToast,
   categoryId,
   booksTitle,
   authorId,
+  isVisibleMenu,
+  isVisibleSearch,
 } = uiSlice.actions;
 export default uiSlice.reducer;

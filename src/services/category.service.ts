@@ -2,7 +2,7 @@ import { axiosInstance } from '@/lib/axios';
 import { QueryConfig } from '@/lib/reactQuery';
 import { CategoriesResponse } from '@/types/categories-response.type';
 import { ApiResponse } from '@/types/response.type';
-import { queryOptions, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryOptions } from '@tanstack/react-query';
 
 export async function categoryService(): Promise<CategoriesResponse> {
   const { data } =

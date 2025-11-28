@@ -2,21 +2,22 @@ import { ComponentProps } from '@/global-type/component-type';
 import { ListCard } from '../card-box';
 import { useInfiniteBooks } from '@/services/hooks/useBooks';
 import { BookListQueryProps } from '@/services/book-list.service';
-import { usePathname } from 'next/navigation';
 import { Spinner } from '../spinner';
-import { ArchiveX } from 'lucide-react';
+import { ArchiveX, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/library';
+import { safeImageSrc } from '@/lib/utils';
 
 export const BooksCard: React.FC<ComponentProps> = () => {
   const categoryId = useSelector((state: RootState) => state.ui.categoryId);
-  const booksTitle = useSelector((state: RootState) => state.ui.booksTitle);
+  const booksTitle = useSelector((state: RootState) => state.ui.q);
+  const authorId = useSelector((state: RootState) => state.ui.authorId);
   const params: BookListQueryProps = {};
   params.categoryId = categoryId;
   params.q = booksTitle;
+  params.authorId = authorId;
   const booksQuery = useInfiniteBooks(params);
-  const pathName = usePathname();
 
   if (booksQuery.isLoading) {
     return (
@@ -43,28 +44,40 @@ export const BooksCard: React.FC<ComponentProps> = () => {
 
   return (
     <div className='flex flex-col gap-y-10'>
-      <ListCard.Container className='grid grid-cols-2 flex-wrap md:grid-cols-3 md:gap-y-5 lg:grid-cols-5'>
+      <ListCard.Container className='grid grid-cols-2 flex-wrap gap-y-4 md:grid-cols-3 md:gap-y-5 lg:grid-cols-5'>
         {books.map((book, index) => (
           <ListCard.Box
-            className='h-fit w-full border'
+            className='h-fit w-full cursor-pointer border bg-white drop-shadow-xl/5'
             key={book.id || index}
             oriantation={'potrait'}
           >
             <ListCard.Img
-              src={book.coverImage ?? '/public/images/No-image-available.svg'}
+              src={
+                safeImageSrc(book.coverImage) ??
+                '/../../../../public/images/layout.tsx'
+              }
               alt={book.title}
               className='mx-0 flex h-fit w-full object-contain'
               style={{
+                // width: 'clamp(14rem, 11.94vw, 10.75rem)',
                 height: 'clamp(21rem, 17.92vw, 16.13rem)',
               }}
             />
-            <div className='flex flex-col gap-y-4 md:p-4'>
+            <div className='flex flex-col gap-y-4 p-3 md:p-4'>
               <p className='leading-lg truncate text-lg font-bold tracking-tight'>
                 {book.title}
               </p>
               <p className='text-md leading-md font-medium'>
                 {book.Author.name}
               </p>
+              <div className='flex items-center justify-start'>
+                <div className='p-0.75'>
+                  <Star fill='#FFAB0D' stroke='none' />
+                </div>
+                <p className='text-md leading-md font-semibold'>
+                  {book.rating}
+                </p>
+              </div>
             </div>
           </ListCard.Box>
         ))}

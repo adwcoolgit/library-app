@@ -1,3 +1,6 @@
+import { Author } from 'next/dist/lib/metadata/types/metadata-types';
+import { Category } from './categories-response.type';
+
 export interface BooksResponse {
   books: Book[];
   pagination: Pagination;
@@ -16,7 +19,7 @@ export interface Book {
   description: string;
   isbn: string;
   publishedYear: number;
-  coverImage: string | null;
+  coverImage: string | 'public/images/No-image-available.svg';
   price: number;
   stock: number;
   isActive: boolean;
@@ -31,19 +34,4 @@ export interface Book {
   totalCopies: number;
   Author: Author;
   Category: Category;
-}
-
-export interface Author {
-  id: number;
-  name: string;
-  bio: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface Category {
-  id: number;
-  name: string;
-  createdAt: string;
-  updatedAt: string;
 }

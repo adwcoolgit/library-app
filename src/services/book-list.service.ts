@@ -5,11 +5,11 @@ import { ApiResponse } from '@/types/response.type';
 import { infiniteQueryOptions } from '@tanstack/react-query';
 
 export type BookListQueryProps = {
-  q?: string;
-  categoryId?: number;
-  authorId?: number;
-  page?: number;
-  limit?: number;
+  q?: string | null;
+  categoryId?: number | null;
+  authorId?: number | null;
+  page?: number | null;
+  limit?: number | null;
 };
 
 export async function bookService(

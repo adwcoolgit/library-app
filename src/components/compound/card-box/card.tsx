@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import { Slot } from '@radix-ui/react-slot';
 import { cva, VariantProps } from 'class-variance-authority';
 
-const cardVariants = cva('justify-center flex rounded-t-xl w-full', {
+const cardVariants = cva('flex rounded-xl w-full', {
   variants: {
     oriantation: {
       landscape: 'flex-row',
