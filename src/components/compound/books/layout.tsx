@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/app/store';
 import { cn, safeImageSrc } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 
 interface FilterProps {
   ratings?: number[] | undefined;
@@ -19,10 +20,11 @@ export const BooksCard: React.FC<ComponentProps & FilterProps> = ({
   const categoryId = useSelector((state: RootState) => state.books.categoryId);
   const booksTitle = useSelector((state: RootState) => state.books.q);
   const authorId = useSelector((state: RootState) => state.books.authorId);
+  const router = useRouter();
   const params: BookListQueryProps = {};
   params.categoryId = categoryId;
-  params.q = booksTitle;
   params.authorId = authorId;
+  params.q = booksTitle;
   const {
     data: booksData,
     isLoading: loadingBooks,
@@ -61,6 +63,19 @@ export const BooksCard: React.FC<ComponentProps & FilterProps> = ({
     return ratingMatch;
   });
 
+  if (!filteredBooks.length) {
+    return (
+      <div
+        className='bg-background flex h-10 flex-col items-center justify-center text-neutral-400'
+        role='list'
+        aria-label='books'
+      >
+        <ArchiveX className='size-10' />
+        <h4>No Book Found</h4>
+      </div>
+    );
+  }
+
   return (
     <div className='flex flex-col gap-y-10'>
       <ListCard.Container
@@ -74,6 +89,7 @@ export const BooksCard: React.FC<ComponentProps & FilterProps> = ({
             className='h-fit w-full flex-1/4 cursor-pointer overflow-hidden border bg-white drop-shadow-xl/5'
             key={book.id || index}
             oriantation={'potrait'}
+            onClick={() => router.push(`/book/${book.id}`)}
           >
             <ListCard.Img
               src={

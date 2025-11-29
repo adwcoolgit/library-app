@@ -4,11 +4,11 @@ import { cn } from '@/lib/utils';
 import { useParams } from 'next/navigation';
 import imgFinance from '../../../../public/images/Fiction.png';
 import { useDispatch } from 'react-redux';
-import { updateBooks } from '@/features/booksSlice';
 import { Spinner } from '../spinner';
 import { useAuthor } from '@/services/hooks/useAuthor';
 import { Icon } from '@iconify/react';
 import { BookListQueryProps } from '@/services/book-list.service';
+import { updateBooks } from '@/features/booksSlice';
 
 export const AuthorCard: React.FC<ComponentProps> = ({ className }) => {
   const author = useParams();
@@ -94,30 +94,6 @@ export const AuthorCard: React.FC<ComponentProps> = ({ className }) => {
           </div>
         </ListCard.Box>
       ))}
-      {/* {authors?.authors.map((author, i) => (
-        <div className='relative justify-start border' key={i}>
-          <ListCard.Box
-            className='bg-card flex-center left-0 flex h-full w-full gap-y-3 rounded-xl border p-3'
-            oriantation={'landscape'}
-            onClick={() => dispatch(authorId(author.id))}
-          >
-            <ListCard.Img
-              alt={author.name}
-              src={imgFinance.src}
-              className='bg-category-card size-20.25 justify-self-start rounded-full border'
-            />
-            <div className='flex-col gap-y-0.5'>
-              <p className='leading-sm md:leading-lg w-full justify-self-start text-sm font-bold md:text-lg'>
-                {author.name}
-              </p>
-              <div className='flex'>
-                <div className=''></div>
-                <div className='text-md leading-md font-medium'>4 Books</div>
-              </div>
-            </div>
-          </ListCard.Box>
-        </div>
-      ))} */}
     </ListCard.Container>
   );
 };

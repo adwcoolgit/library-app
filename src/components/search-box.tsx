@@ -5,8 +5,8 @@ import { Search } from 'lucide-react';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import debounce from 'lodash.debounce';
-import { updateBooks } from '@/features/booksSlice';
 import { BookListQueryProps } from '@/services/book-list.service';
+import { updateBooks } from '@/features/booksSlice';
 
 interface SearchBoxProps {
   className?: string;
@@ -30,7 +30,7 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ className }) => {
       onClick={() => {
         const params: BookListQueryProps = {};
         params.q = searchValue;
-        dispatch(updateBooks(params.q));
+        dispatch(updateBooks(params));
       }}
     >
       <Input

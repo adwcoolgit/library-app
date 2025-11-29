@@ -5,15 +5,16 @@ import { useParams, useRouter } from 'next/navigation';
 import { useCategories } from '@/services/hooks/useCategory';
 import imgFinance from '../../../../public/images/Fiction.png';
 import { useDispatch } from 'react-redux';
-import { updateBooks } from '@/features/booksSlice';
 import { Spinner } from '../spinner';
 import { BookListQueryProps } from '@/services/book-list.service';
+import { updateBooks } from '@/features/booksSlice';
+import { ArchiveX } from 'lucide-react';
 
 export const CategoriesCard: React.FC<ComponentProps> = ({ className }) => {
   const category = useParams();
-  const router = useRouter();
   const dispatch = useDispatch();
   const params: BookListQueryProps = {};
+
   const { data: categories, isLoading } = useCategories({
     queryConfig: {
       enabled: !!category,
@@ -24,6 +25,19 @@ export const CategoriesCard: React.FC<ComponentProps> = ({ className }) => {
     return (
       <div className='flex h-48 w-full items-center justify-center'>
         <Spinner />
+      </div>
+    );
+  }
+
+  if (!categories) {
+    return (
+      <div
+        className='bg-background flex h-10 flex-col items-center justify-center text-neutral-400'
+        role='list'
+        aria-label='books'
+      >
+        <ArchiveX className='size-10' />
+        <h4>No Categories Found</h4>
       </div>
     );
   }
@@ -39,7 +53,7 @@ export const CategoriesCard: React.FC<ComponentProps> = ({ className }) => {
         className='bg-card flex-center h-full w-full flex-col gap-y-3 rounded-xl border p-3'
         key={0}
         oriantation={'potrait'}
-        onClick={() => dispatch(updateBooks(null))}
+        onClick={() => dispatch(updateBooks(0))}
       >
         <ListCard.Img
           alt={'All Category'}
@@ -57,7 +71,7 @@ export const CategoriesCard: React.FC<ComponentProps> = ({ className }) => {
           oriantation={'potrait'}
           onClick={() => {
             params.authorId = category.id;
-            dispatch(updateBooks(category.id));
+            dispatch(updateBooks(params));
           }}
         >
           <ListCard.Img

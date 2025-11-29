@@ -1,9 +1,14 @@
-import { Author } from 'next/dist/lib/metadata/types/metadata-types';
+import { Author } from './author-response.type';
 import { Category } from './categories-response.type';
+import { User } from './user.type';
 
 export interface BooksResponse {
   books: Book[];
   pagination: Pagination;
+}
+
+export interface BookResponse {
+  data: Book;
 }
 
 export interface Pagination {
@@ -34,4 +39,15 @@ export interface Book {
   totalCopies: number;
   Author: Author;
   Category: Category;
+  Review: Review[];
+}
+
+interface Review {
+  id: number;
+  star: number;
+  comment: string;
+  userId: number;
+  bookId: number;
+  createdAt: string;
+  User: User;
 }

@@ -10,20 +10,20 @@ import { Label } from '@/components/ui/label';
 import { Wrapper } from '@/components/wrapper';
 import { updateBooks } from '@/features/booksSlice';
 import { BookListQueryProps } from '@/services/book-list.service';
-import { useInfiniteBooks } from '@/services/hooks/useBooks';
 import { useCategories } from '@/services/hooks/useCategory';
-import { ChevronDown, Star } from 'lucide-react';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { Star } from 'lucide-react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 export default function Category() {
-  const categoryId = useSelector((state: RootState) => state.books.categoryId);
   const [selectedCategory, setSelectedCategory] = useState<number | null>();
+  const categoryId = useSelector((state: RootState) => state.books.categoryId);
   const { data: categories, isLoading } = useCategories();
   const [ratingFilter, setRatingFilter] = useState<number[]>([]);
   const dispatch = useDispatch();
   const params: BookListQueryProps = {};
+  params.categoryId = categoryId;
+  params.limit = 20;
 
   if (isLoading) {
     return (
