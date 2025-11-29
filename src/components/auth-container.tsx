@@ -3,7 +3,7 @@ import { X } from 'lucide-react';
 import { useContext, useEffect } from 'react';
 import { AuthContext } from '@/contexts/auth.context';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/app/library';
+import { RootState } from '@/app/store';
 import { Button } from './ui/button';
 import { FormLogin } from './compound/login/partial';
 import { Logo } from './logo';
@@ -44,7 +44,7 @@ export const AuthContainer = <T extends FieldValues>({
     <>
       <div
         className={cn(
-          'flex h-fit w-auto grow md:grow-0 md:w-fit my-auto mx-1 md:mx-auto items-center justify-center gap-y-4 rounded-[12px] border bg-white p-8.75 drop-shadow-2xl md:p-8',
+          'mx-1 my-auto flex h-fit w-auto grow items-center justify-center gap-y-4 rounded-[12px] border bg-white p-8.75 drop-shadow-2xl md:mx-auto md:w-fit md:grow-0 md:p-8',
           className
         )}
       >

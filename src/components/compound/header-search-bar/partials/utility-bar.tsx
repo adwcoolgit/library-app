@@ -7,20 +7,14 @@ import { ChevronDown, Menu, Search, X } from 'lucide-react';
 import { type User as UserType } from '@/types/user.type';
 import { AuthContext, AuthDialog } from '@/contexts/auth.context';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '@/app/library';
-import { useQueryClient } from '@tanstack/react-query';
-import { useContext, useEffect, useState } from 'react';
+import { RootState } from '@/app/store';
+import { useContext, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@iconify/react';
 import { SearchBox } from '@/components/search-box';
 import { ListOption } from '@/components/list-option';
-import {
-  booksTitle,
-  isVisibleMenu,
-  isVisibleSearch,
-  openAuthModal,
-  showToast,
-} from '@/features/ui/uiSlice';
+import { isVisibleMenu, isVisibleSearch } from '@/features/ui/uiSlice';
+import { updateBooks } from '@/features/booksSlice';
 
 export interface StateProps {
   search: boolean;
@@ -85,7 +79,7 @@ export const UtilityBar: React.FC<ComponentProps> = ({ className }) => {
         <div className='relative mx-0 flex w-full justify-end'>
           {/* Login & Register button */}
           <AuthButton
-            className={`md:mt-none bg-background absolute mt-10 w-auto md:relative`}
+            className={`md:mt-none absolute mt-10 w-auto md:relative`}
             btnLogin={btnAuth_Click}
             hideUtility={hideUtility}
           />
@@ -124,7 +118,7 @@ const CartBadge: React.FC<ComponentProps> = ({ className }) => {
               <X
                 onClick={() => {
                   dispatch(isVisibleSearch(!visibleSearch));
-                  dispatch(booksTitle(null));
+                  dispatch(updateBooks(null));
                 }}
               />
             </>

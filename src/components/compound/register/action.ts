@@ -1,4 +1,4 @@
-import { AppDispatch } from '@/app/library';
+import { AppDispatch } from '@/app/store';
 import { AuthContext } from '@/contexts/auth.context';
 import { RegisterPayload, registerSchema } from '@/schemas/register.schema';
 import { useRegister } from '@/services/hooks/useRegister';

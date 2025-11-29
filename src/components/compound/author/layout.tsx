@@ -4,15 +4,17 @@ import { cn } from '@/lib/utils';
 import { useParams } from 'next/navigation';
 import imgFinance from '../../../../public/images/Fiction.png';
 import { useDispatch } from 'react-redux';
-import { authorId, categoryId } from '@/features/ui/uiSlice';
+import { updateBooks } from '@/features/booksSlice';
 import { Spinner } from '../spinner';
 import { useAuthor } from '@/services/hooks/useAuthor';
-import { Book, BookA } from 'lucide-react';
 import { Icon } from '@iconify/react';
+import { BookListQueryProps } from '@/services/book-list.service';
 
 export const AuthorCard: React.FC<ComponentProps> = ({ className }) => {
   const author = useParams();
   const dispatch = useDispatch();
+  const params: BookListQueryProps = {};
+
   const { data: authors, isLoading } = useAuthor({
     queryConfig: {
       enabled: !!author,
@@ -38,7 +40,7 @@ export const AuthorCard: React.FC<ComponentProps> = ({ className }) => {
         className='flex h-full w-full gap-y-3 rounded-xl border bg-white p-3'
         key={0}
         oriantation={'landscape'}
-        onClick={() => dispatch(authorId(null))}
+        onClick={() => dispatch(updateBooks(null))}
       >
         <div className='flex h-20.25 items-center gap-x-3 md:gap-x-4'>
           <ListCard.Img
@@ -62,7 +64,10 @@ export const AuthorCard: React.FC<ComponentProps> = ({ className }) => {
           className='bg-card flex h-full w-full gap-y-3 rounded-xl border p-3'
           key={i}
           oriantation={'landscape'}
-          onClick={() => dispatch(authorId(author.id))}
+          onClick={() => {
+            params.authorId = author.id;
+            dispatch(updateBooks(params));
+          }}
         >
           <div className='flex h-20.25 items-center gap-x-3 md:gap-x-4'>
             <ListCard.Img

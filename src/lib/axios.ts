@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { AxiosError, AxiosHeaders, AxiosRequestConfig } from 'axios';
 
 export const axiosInstance = axios.create({

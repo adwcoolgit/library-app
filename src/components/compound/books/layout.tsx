@@ -6,20 +6,31 @@ import { Spinner } from '../spinner';
 import { ArchiveX, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useSelector } from 'react-redux';
-import { RootState } from '@/app/library';
-import { safeImageSrc } from '@/lib/utils';
+import { RootState } from '@/app/store';
+import { cn, safeImageSrc } from '@/lib/utils';
 
-export const BooksCard: React.FC<ComponentProps> = () => {
-  const categoryId = useSelector((state: RootState) => state.ui.categoryId);
-  const booksTitle = useSelector((state: RootState) => state.ui.q);
-  const authorId = useSelector((state: RootState) => state.ui.authorId);
+interface FilterProps {
+  ratings?: number[] | undefined;
+}
+export const BooksCard: React.FC<ComponentProps & FilterProps> = ({
+  className,
+  ratings = [],
+}) => {
+  const categoryId = useSelector((state: RootState) => state.books.categoryId);
+  const booksTitle = useSelector((state: RootState) => state.books.q);
+  const authorId = useSelector((state: RootState) => state.books.authorId);
   const params: BookListQueryProps = {};
   params.categoryId = categoryId;
   params.q = booksTitle;
   params.authorId = authorId;
-  const booksQuery = useInfiniteBooks(params);
+  const {
+    data: booksData,
+    isLoading: loadingBooks,
+    hasNextPage,
+    fetchNextPage,
+  } = useInfiniteBooks(params);
 
-  if (booksQuery.isLoading) {
+  if (loadingBooks) {
     return (
       <div className='flex h-48 w-full items-center justify-center'>
         <Spinner />
@@ -27,7 +38,7 @@ export const BooksCard: React.FC<ComponentProps> = () => {
     );
   }
 
-  const books = booksQuery.data?.pages.flatMap((page) => page.books);
+  const books = booksData?.pages.flatMap((page) => page.books);
 
   if (!books?.length) {
     return (
@@ -42,12 +53,25 @@ export const BooksCard: React.FC<ComponentProps> = () => {
     );
   }
 
+  const filteredBooks = books.filter((book) => {
+    const ratingMatch =
+      ratings.length === 0 ||
+      ratings.some((r) => book.rating >= r && book.rating < r + 1);
+
+    return ratingMatch;
+  });
+
   return (
     <div className='flex flex-col gap-y-10'>
-      <ListCard.Container className='grid grid-cols-2 flex-wrap gap-y-4 md:grid-cols-3 md:gap-y-5 lg:grid-cols-5'>
-        {books.map((book, index) => (
+      <ListCard.Container
+        className={cn(
+          'grid grid-cols-2 flex-wrap gap-y-4 md:grid-cols-3 md:gap-y-5 lg:grid-cols-5',
+          className
+        )}
+      >
+        {filteredBooks.map((book, index) => (
           <ListCard.Box
-            className='h-fit w-full cursor-pointer border bg-white drop-shadow-xl/5'
+            className='h-fit w-full flex-1/4 cursor-pointer overflow-hidden border bg-white drop-shadow-xl/5'
             key={book.id || index}
             oriantation={'potrait'}
           >
@@ -57,13 +81,12 @@ export const BooksCard: React.FC<ComponentProps> = () => {
                 '/../../../../public/images/layout.tsx'
               }
               alt={book.title}
-              className='mx-0 flex h-fit w-full object-contain'
+              className='mx-0 flex h-fit w-full object-fill'
               style={{
-                // width: 'clamp(14rem, 11.94vw, 10.75rem)',
                 height: 'clamp(21rem, 17.92vw, 16.13rem)',
               }}
             />
-            <div className='flex flex-col gap-y-4 p-3 md:p-4'>
+            <div className='flex flex-col gap-y-1 p-3 md:p-4'>
               <p className='leading-lg truncate text-lg font-bold tracking-tight'>
                 {book.title}
               </p>
@@ -82,11 +105,11 @@ export const BooksCard: React.FC<ComponentProps> = () => {
           </ListCard.Box>
         ))}
       </ListCard.Container>
-      {booksQuery.hasNextPage && (
+      {hasNextPage && (
         <Button
           variant={'outline'}
           className='md:w-50'
-          onClick={() => booksQuery.fetchNextPage()}
+          onClick={() => fetchNextPage()}
         >
           <p className='text-md leading-md font-semibold'>Load More</p>
         </Button>

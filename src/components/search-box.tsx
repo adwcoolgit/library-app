@@ -5,7 +5,8 @@ import { Search } from 'lucide-react';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import debounce from 'lodash.debounce';
-import { booksTitle } from '@/features/ui/uiSlice';
+import { updateBooks } from '@/features/booksSlice';
+import { BookListQueryProps } from '@/services/book-list.service';
 
 interface SearchBoxProps {
   className?: string;
@@ -24,7 +25,14 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ className }) => {
   };
 
   return (
-    <div className={cn('relative hidden w-auto md:block', className)}>
+    <div
+      className={cn('relative hidden w-auto md:block', className)}
+      onClick={() => {
+        const params: BookListQueryProps = {};
+        params.q = searchValue;
+        dispatch(updateBooks(params.q));
+      }}
+    >
       <Input
         placeholder='Search book'
         variant={'search'}
@@ -36,7 +44,6 @@ export const SearchBox: React.FC<SearchBoxProps> = ({ className }) => {
         variant={'borderless'}
         size={'icon-sm'}
         className='absolute top-1/2 left-0.5 z-50 flex size-fit h-full -translate-y-1/2 rounded-none border-0 p-2'
-        onClick={() => dispatch(booksTitle(searchValue))}
       >
         <Search size={18} className='text-neutral-500' />
       </Button>

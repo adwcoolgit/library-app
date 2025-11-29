@@ -36,15 +36,6 @@ const uiSlice = createSlice({
     hideToast: (state) => {
       state.toastMessage = null;
     },
-    categoryId: (state, action: PayloadAction<number | null>) => {
-      state.categoryId = action.payload;
-    },
-    booksTitle: (state, action: PayloadAction<string | null>) => {
-      state.q = action.payload;
-    },
-    authorId: (state, action: PayloadAction<number | null>) => {
-      state.authorId = action.payload;
-    },
     isVisibleMenu: (state, action: PayloadAction<boolean>) => {
       state.menu = action.payload;
     },
@@ -59,9 +50,6 @@ export const {
   closeAuthModal,
   showToast,
   hideToast,
-  categoryId,
-  booksTitle,
-  authorId,
   isVisibleMenu,
   isVisibleSearch,
 } = uiSlice.actions;

@@ -1,16 +1,19 @@
 import { ComponentProps } from '@/global-type/component-type';
 import { ListCard } from '../card-box';
 import { cn } from '@/lib/utils';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCategories } from '@/services/hooks/useCategory';
 import imgFinance from '../../../../public/images/Fiction.png';
 import { useDispatch } from 'react-redux';
-import { categoryId } from '@/features/ui/uiSlice';
+import { updateBooks } from '@/features/booksSlice';
 import { Spinner } from '../spinner';
+import { BookListQueryProps } from '@/services/book-list.service';
 
 export const CategoriesCard: React.FC<ComponentProps> = ({ className }) => {
   const category = useParams();
+  const router = useRouter();
   const dispatch = useDispatch();
+  const params: BookListQueryProps = {};
   const { data: categories, isLoading } = useCategories({
     queryConfig: {
       enabled: !!category,
@@ -36,7 +39,7 @@ export const CategoriesCard: React.FC<ComponentProps> = ({ className }) => {
         className='bg-card flex-center h-full w-full flex-col gap-y-3 rounded-xl border p-3'
         key={0}
         oriantation={'potrait'}
-        onClick={() => dispatch(categoryId(null))}
+        onClick={() => dispatch(updateBooks(null))}
       >
         <ListCard.Img
           alt={'All Category'}
@@ -52,7 +55,10 @@ export const CategoriesCard: React.FC<ComponentProps> = ({ className }) => {
           className='bg-card flex-center h-full w-full flex-col gap-y-3 rounded-xl border p-3'
           key={i}
           oriantation={'potrait'}
-          onClick={() => dispatch(categoryId(category.id))}
+          onClick={() => {
+            params.authorId = category.id;
+            dispatch(updateBooks(category.id));
+          }}
         >
           <ListCard.Img
             alt={category.name}

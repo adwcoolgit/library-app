@@ -10,7 +10,7 @@ import { LoginResponse } from '@/types/login-response.type';
 import { User } from '@/types/user.type';
 import { ApiResponse } from '@/types/response.type';
 import axios from 'axios';
-import { RootState } from '@/app/library';
+import { RootState } from '@/app/store';
 import { showToast } from '@/features/ui/uiSlice';
 
 export async function loginService(
